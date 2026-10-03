@@ -38,8 +38,13 @@ KNOWN_CAPES = {
     "Sunrise Cape": "sunrise",
     "Earth Cape": "earth",
     "Dungeons Cape": "dungeons",
-    "Cave Cape": "cave",
+    "Dungeons II Cape": "dungeons2",
+    "Dungeons II Promo Cape": "dungeons-ii",
+    "Dungeons II Promo Cape": "dungeonsii",
+    "Adventure Cape": "adventure",
+    "Promo Cape": "promo",
     "Meme Cape": "meme",
+    "Cave Cape": "cave",
 }
 
 def decode_cape_info(properties: list) -> dict | None:
@@ -71,7 +76,6 @@ def identify_cape(cape_url: str) -> str:
         if keyword in url_lower:
             return name
 
-    # Generic fallback for newer cape families that may not be in the static list yet.
     generic_keywords = {
         "pride": "Pride Cape",
         "winter": "Winter Cape",
@@ -81,8 +85,13 @@ def identify_cape(cape_url: str) -> str:
         "sunrise": "Sunrise Cape",
         "earth": "Earth Cape",
         "dungeons": "Dungeons Cape",
-        "cave": "Cave Cape",
+        "dungeonsii": "Dungeons II Cape",
+        "dungeons-ii": "Dungeons II Cape",
+        "dungeons2": "Dungeons II Cape",
+        "adventure": "Adventure Cape",
+        "promo": "Promo Cape",
         "meme": "Meme Cape",
+        "cave": "Cave Cape",
     }
     for keyword, name in generic_keywords.items():
         if keyword in url_lower:
@@ -131,17 +140,14 @@ def lookup_player(input_str: str):
         except:
             pass
 
-        # Try Bedrock
         print("Not found as Java player. Checking Bedrock...")
         xuid = clean_uuid[16:] if clean_uuid.startswith("0000000000000000") else clean_uuid
         get_bedrock_gamertag(xuid)
 
     else:
-        # Username / Gamertag Mode
         print("Detected: Username / Gamertag format")
         username = input_str
 
-        # Try Java first
         try:
             java_url = f"https://api.mojang.com/users/profiles/minecraft/{username}"
             r = requests.get(java_url, timeout=10)
@@ -152,7 +158,6 @@ def lookup_player(input_str: str):
                 print(f"✅ **Java Edition**")
                 print(f"Username : {name}")
                 print(f"UUID     : {format_uuid(uuid)}")
-                # Fetch full profile to get cape/texture data
                 try:
                     profile_url = f"https://sessionserver.mojang.com/session/minecraft/profile/{uuid}"
                     pr = requests.get(profile_url, timeout=10)
@@ -169,7 +174,6 @@ def lookup_player(input_str: str):
         except:
             pass
 
-        # Try Bedrock
         get_bedrock_xuid_and_gamertag(username)
 
 
@@ -211,16 +215,10 @@ def get_bedrock_xuid_and_gamertag(gamertag: str):
     print("❌ Could not find Bedrock player with this Gamertag.")
 
 
-# ========================
-# Main Program
-# ========================
-
 if __name__ == "__main__":
     print("🎮 Minecraft Player Lookup Tool (UUID or IGN)")
     print("   Supports Java Edition & Bedrock Edition")
     print("=" * 65)
-
-    # Credits
     print("   Coded by Visalyputra using Grok AI")
     print("=" * 65)
 
