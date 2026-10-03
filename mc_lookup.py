@@ -40,7 +40,6 @@ KNOWN_CAPES = {
     "Dungeons Cape": "dungeons",
     "Dungeons II Cape": "dungeons2",
     "Dungeons II Promo Cape": "dungeons-ii",
-    "Dungeons II Promo Cape": "dungeonsii",
     "Adventure Cape": "adventure",
     "Promo Cape": "promo",
     "Meme Cape": "meme",
@@ -72,11 +71,22 @@ def identify_cape(cape_url: str) -> str:
         return "Unknown / Custom Cape"
 
     url_lower = cape_url.lower()
+    
+    # Check against known capes dictionary first
     for name, keyword in KNOWN_CAPES.items():
         if keyword in url_lower:
             return name
 
+    # Extended detection for newer cape families and variations
     generic_keywords = {
+        "dungeons-ii": "Dungeons II Cape",
+        "dungeons2": "Dungeons II Cape",
+        "dungeons ii": "Dungeons II Cape",
+        "minecraft dungeons ii": "Dungeons II Promo Cape",
+        "minecraft-dungeons-ii": "Dungeons II Promo Cape",
+        "dungeons": "Dungeons Cape",
+        "adventure": "Adventure Cape",
+        "promo": "Promo Cape",
         "pride": "Pride Cape",
         "winter": "Winter Cape",
         "festival": "Festival Cape",
@@ -84,15 +94,23 @@ def identify_cape(cape_url: str) -> str:
         "creator": "Creator Cape",
         "sunrise": "Sunrise Cape",
         "earth": "Earth Cape",
-        "dungeons": "Dungeons Cape",
-        "dungeonsii": "Dungeons II Cape",
-        "dungeons-ii": "Dungeons II Cape",
-        "dungeons2": "Dungeons II Cape",
-        "adventure": "Adventure Cape",
-        "promo": "Promo Cape",
         "meme": "Meme Cape",
         "cave": "Cave Cape",
     }
+    
+    # Priority check: check most specific patterns first
+    priority_keywords = [
+        "dungeons-ii",
+        "dungeons2",
+        "minecraft-dungeons-ii",
+        "minecraft dungeons ii",
+    ]
+    
+    for keyword in priority_keywords:
+        if keyword in url_lower:
+            return generic_keywords[keyword]
+    
+    # Then check all other generic keywords
     for keyword, name in generic_keywords.items():
         if keyword in url_lower:
             return name
