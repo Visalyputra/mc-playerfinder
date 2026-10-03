@@ -17,18 +17,29 @@ def format_uuid(uuid: str) -> str:
 
 
 KNOWN_CAPES = {
-    "OptiFine Cape":     "optifine",
-    "MineCon 2011":      "c2edc0",
-    "MineCon 2012":      "a2536a",
-    "MineCon 2013":      "0571b0",
-    "MineCon 2015":      "5d963b",
-    "MineCon 2016":      "b06c71",
-    "Migrator Cape":     "migrator",
-    "Vanilla Cape":      "vanilla",
-    "Cherry Blossom":    "cherry",
-    "Cobalt":            "cobalt",
-    "Mojang Classic":    "mojangfirst",
-    "Realms Mapmaker":   "mapmaker",
+    "OptiFine Cape": "optifine",
+    "MineCon 2011": "c2edc0",
+    "MineCon 2012": "a2536a",
+    "MineCon 2013": "0571b0",
+    "MineCon 2015": "5d963b",
+    "MineCon 2016": "b06c71",
+    "Migrator Cape": "migrator",
+    "Vanilla Cape": "vanilla",
+    "Cherry Blossom": "cherry",
+    "Cobalt": "cobalt",
+    "Mojang Classic": "mojangfirst",
+    "Realms Mapmaker": "mapmaker",
+    "Mojang Cape": "mojang",
+    "Pride Cape": "pride",
+    "Winter Cape": "winter",
+    "Festival Cape": "festival",
+    "Birthday Cape": "birthday",
+    "Creator Cape": "creator",
+    "Sunrise Cape": "sunrise",
+    "Earth Cape": "earth",
+    "Dungeons Cape": "dungeons",
+    "Cave Cape": "cave",
+    "Meme Cape": "meme",
 }
 
 def decode_cape_info(properties: list) -> dict | None:
@@ -52,10 +63,31 @@ def decode_cape_info(properties: list) -> dict | None:
 
 def identify_cape(cape_url: str) -> str:
     """Try to match a cape URL to a known cape name."""
+    if not cape_url:
+        return "Unknown / Custom Cape"
+
     url_lower = cape_url.lower()
     for name, keyword in KNOWN_CAPES.items():
         if keyword in url_lower:
             return name
+
+    # Generic fallback for newer cape families that may not be in the static list yet.
+    generic_keywords = {
+        "pride": "Pride Cape",
+        "winter": "Winter Cape",
+        "festival": "Festival Cape",
+        "birthday": "Birthday Cape",
+        "creator": "Creator Cape",
+        "sunrise": "Sunrise Cape",
+        "earth": "Earth Cape",
+        "dungeons": "Dungeons Cape",
+        "cave": "Cave Cape",
+        "meme": "Meme Cape",
+    }
+    for keyword, name in generic_keywords.items():
+        if keyword in url_lower:
+            return name
+
     return "Unknown / Custom Cape"
 
 
@@ -187,17 +219,17 @@ if __name__ == "__main__":
     print("🎮 Minecraft Player Lookup Tool (UUID or IGN)")
     print("   Supports Java Edition & Bedrock Edition")
     print("=" * 65)
-    
+
     # Credits
     print("   Coded by Visalyputra using Grok AI")
     print("=" * 65)
 
     while True:
         user_input = input("\nEnter UUID or Username (or 'quit' to exit): ").strip()
-        
+
         if user_input.lower() in ['quit', 'exit', 'q']:
             print("\n👋 Goodbye! Happy gaming!")
             break
-            
+
         if user_input:
             lookup_player(user_input)
